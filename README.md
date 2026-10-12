@@ -246,6 +246,8 @@ B reçoit le paquet sur ens36 et voit que l’adresse de destination n’est pas
 
 ### 2) Faire 2 captures de trame : une sur R1 et une sur R2
 
+Ce sont les mêmes 2 captures que pour l’aller, les 2 .pcapng sur R1 et sur R2, car l’echo request et l’echo reply se trouvent dans la même capture. Ici on regarde donc les lignes qui partent de 192.168.20.3 (C) vers 192.168.10.1 (A), c’est-à-dire les echo reply :
+
 ![Capture 27](images/27.png)
 
 ### 3) Repérer un paquet sur R1 et son équivalent sur R2 (expliquez pourquoi le paquet que vous choisissez sur R2 est celui qui réalise la fin du trajet de A à C)
