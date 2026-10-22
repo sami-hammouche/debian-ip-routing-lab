@@ -234,7 +234,7 @@ MAC SRC et DST : Oui, elles vont changer car une adresse MAC est une adresse sp�
 
 ### Nous allons donc étudier le trajet d’un paquet retour de C à A :
 
-Nous allons suivre le retour donc un paquet echo reply (ICMP Echo Reponse), on va prendre celui qu’on vien d’étudier donc le seq=2/512 ce qui correspond a la trame 9.
+Nous allons suivre le retour donc un paquet echo reply (ICMP Echo Réponse), on va prendre celui qu’on vient d’étudier donc le seq=2/512 ce qui correspond à la trame 9.
 
 ### 1) Décisions de routage déterminant ce trajet à chaque étape
 
@@ -248,7 +248,7 @@ B reçoit le paquet sur ens36 et voit que l’adresse de destination n’est pas
 
 Ce sont les mêmes 2 captures que pour l’aller, les 2 .pcapng sur R1 et sur R2, car l’echo request et l’echo reply se trouvent dans la même capture. Ici on regarde donc les lignes qui partent de 192.168.20.3 (C) vers 192.168.10.1 (A), c’est-à-dire les echo reply :
 
-![Capture 27](images/27.png)
+![Capture 29](images/29.png)
 
 ### 3) Repérer un paquet sur R1 et son équivalent sur R2 (expliquez pourquoi le paquet que vous choisissez sur R2 est celui qui réalise la fin du trajet de A à C)
 
@@ -256,13 +256,13 @@ Je choisis la trame 9, un echo reply, et ça correspond bien à la réponse du p
 
 Sur R1 :
 
-![Capture 28](images/28.png)
+![Capture 30](images/30.png)
 
 Son équivalent sur R2 :
 
 Comme on peut le voir sur ces captures, la trame 9 est un Echo reply de 192.168.20.3 (C) vers 192.168.10.1 (A) avec **id=0x000c**, **seq=2/512**, et un **TTL=64** sur R2 au départ de C qui passe à un **TTL=63** sur R1, vu qu’il a traversé le routeur B.
 
-![Capture 29](images/29.png)
+![Capture 31](images/31.png)
 
 Pourquoi c’est bien la fin du trajet : Nous voyons que sur R1 l’adresse MAC de destination est celle de A. Une adresse MAC de destination désigne toujours la prochaine machine qui reçoit le paquet, et ici c’est directement A. Le paquet est donc remis à sa destination finale.
 
@@ -284,7 +284,7 @@ Voici comment je fais la connexion ssh à partir de A pour me connecter à la ma
 
 D’abord il faudra faire en sorte que les permissions de se connecter en tant que root soient bien mises, pour pouvoir les mettre je vais directement dans le fichier **sshd_config** et pour y accéder je fais **vi /etc/ssh/sshd_config** et on met les permissions :
 
-![Capture 30](images/30.png)
+![Capture 32](images/32.png)
 
 Là on voit qu’on a bien mis PermitRootLogin à yes.
 
@@ -292,11 +292,11 @@ Ensuite on redémarre le service afin que ça fasse effet en faisant : **systemc
 
 Je regarde si on peut bien se connecter à C en regardant le **systemctl status ssh** directement sur C afin de constater qu’il est bien activé.
 
-![Capture 31](images/31.png)
+![Capture 33](images/33.png)
 
 Et ensuite sur A on fait **ssh root@192.168.20.3** afin de demander la connexion à C. On nous demande le mot de passe, on le met, et on sera bien dans C. On peut le confirmer en faisant ip a, on voit bien qu’on est bien sur la machine C.
 
-![Capture 32](images/32.png)
+![Capture 34](images/34.png)
 
 ### Nous allons donc étudier le trajet d’un paquet ssh de A à C :
 
@@ -318,29 +318,29 @@ Mais aussi voici les captures :
 
 ### La capture sur ens33 :
 
-![Capture 33](images/33.png)
+![Capture 35](images/35.png)
 
 ### La capture sur ens36 :
 
-![Capture 34](images/34.png)
+![Capture 36](images/36.png)
 
 ### 3) Repérer un paquet sur R1 et son équivalent sur R2 (expliquez pourquoi le paquet que vous choisissez sur R2 est celui qui réalise la fin du trajet de A à C)
 
 Voici le paquet choisi :
 
-![Capture 35](images/35.png)
+![Capture 37](images/37.png)
 
 Ce paquet est celui de la trame 5, c’est le SYN, le tout premier paquet de la connexion ssh, qui part de A vers C.
 
-![Capture 36](images/36.png)
+![Capture 38](images/38.png)
 
 **Src port : 33708, Dst Port : 22**, **seq 0** et **TTL 64**
 
 Et voici son équivalent sur ens36 :
 
-![Capture 37](images/37.png)
+![Capture 39](images/39.png)
 
-![Capture 38](images/38.png)
+![Capture 40](images/40.png)
 
 On peut voir qu’ils ont bien les mêmes ports, le même seq, et aussi que maintenant le TTL est à 63. Donc c’est bien le même paquet, juste après que B a regardé sa table de routage et a décrémenté le TTL.
 
