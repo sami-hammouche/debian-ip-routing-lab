@@ -58,4 +58,43 @@ première connexion SSH de station1 vers station2
 
 connexion SSH réussie avec le mot de passe
 
+## 2. Authentification TOTP avec Google Authenticator
+
+Tutoriel utilisé : https://www.it-connect.fr/linux-comment-activer-le-mfa-sur-un-acces-ssh/
+
+On fera toutes les configurations sur station2, car c’est le serveur SSH qui vérifie le code. Le module PAM **pam_google_authenticator** calcule le code attendu à partir d’un secret partagé avec l’application.
+
+![Capture 11](images/11.png)
+
+Sur station2, on installe le module :
+apt install libpam-google-authenticator
+
+Après, on génère le secret pour l’utilisateur debian : on configure le module avec la commande google-authenticator.
+
+![Capture 12](images/12.png)
+
+![Capture 13](images/13.png)
+
+Cela va générer un QR code que l’on va scanner avec notre téléphone.
+
+La commande google-authenticator pose ensuite plusieurs questions :
+
+- Tokens basés sur le temps (yes)
+- Mise à jour du fichier ~/.google_authenticator (yes)
+- Interdire plusieurs utilisations du même code (yes)
+- Augmenter la fenêtre de temps (yes)
+- Limitation des tentatives (yes)
+
+Ensuite, on active le MFA sur la connexion SSH en modifiant /etc/pam.d/sshd : on ajoute cette ligne (auth required pam_google_authenticator.so)
+
+![Capture 14](images/14.png)
+
+Après, on configure le serveur SSH : dans /etc/ssh/sshd_config, on met l’option KbdInteractiveAuthentication à yes (sur le site utilisé comme tutoriel, cette option porte un autre nom).
+
+![Capture 15](images/15.png)
+
+Maintenant, quand on est sur station1 et qu’on fait ssh debian@station2, on nous demande en plus le code.
+
+![Capture 16](images/16.png)
+
 *(rapport en cours de rédaction)*
