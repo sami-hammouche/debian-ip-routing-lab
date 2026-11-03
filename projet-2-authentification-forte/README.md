@@ -97,4 +97,47 @@ Maintenant, quand on est sur station1 et qu’on fait ssh debian@station2, on no
 
 ![Capture 16](images/16.png)
 
+## Comparaison des 4 méthodes d’authentification
+Mot de passe seul
+
+Comme d’habitude, on fait ssh debian@station2 et on entre le mot de passe.
+
+![Capture 17](images/17.png)
+
+Un keylogger enregistre le mot de passe. L’attaquant se connecte.
+
+## Mot de passe et code TOTP
+
+Comme on vient de le faire juste avant, on utilise google_authenticator (en suivant ce tutoriel : https://www.it-connect.fr/linux-comment-activer-le-mfa-sur-un-acces-ssh/).
+
+Même keylogger : il a le mot de passe, mais pas le code du téléphone, donc il est bloqué.
+
+## Code TOTP seul
+
+dans /etc/ssh/sshd_config
+
+et /etc/pam.d/sshd.
+
+![Capture 18](images/18.png)
+
+![Capture 19](images/19.png)
+
+Quelqu’un vole le téléphone déverrouillé. Il a le code, donc il se connecte. Avec la méthode 2, il lui manquerait le mot de passe.
+
+## Code TOTP ou mot de passe
+
+![Capture 20](images/20.png)
+
+module google_authenticator en sufficient avant common-auth
+
+le code est demandé en premier
+
+![Capture 21](images/21.png)
+
+![Capture 22](images/22.png)
+
+en appuyant sur Entrée, le mot de passe est demandé
+
+L'attaquant choisit le plus facile : le keylogger suffit (méthode 1) et le vol du téléphone suffit aussi (méthode 3).
+
 *(rapport en cours de rédaction)*
