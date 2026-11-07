@@ -140,4 +140,35 @@ en appuyant sur Entrée, le mot de passe est demandé
 
 L'attaquant choisit le plus facile : le keylogger suffit (méthode 1) et le vol du téléphone suffit aussi (méthode 3).
 
+## PAM : Pluggable Authentication Modules
+
+## Les mots-clés REQUIRED, REQUISITE et SUFFICIENT
+
+Source : page de manuel Linux-PAM pam.conf(5) / pam.d(5), https://sites.uclouvain.be/SystInfo/manpages/man5/pam.d.5.html
+
+**L’ordre des directives du fichier de configuration de PAM compte**
+
+PAM lit le fichier de haut en bas, et comme REQUISITE et SUFFICIENT peuvent arrêter la lecture, déplacer une ligne peut changer complètement le résultat.
+**Exemple 1**
+
+Ici, le code est demandé en premier : s’il est bon, sufficient accepte la suite ; sinon, l’échec est ignoré et le mot de passe est demandé (configuration et résultat : voir la partie « Code TOTP ou mot de passe »).
+Résultat : le code ou le mot de passe suffit.
+**Exemple 2**
+
+On utilise pour l’exemple pam_deny.so, qui est un module PAM qui refuse tout ce qu’on lui donne. On désactive le mot de passe et on met d’abord le required avec le module qui refuse, puis en dessous notre sufficient avec le module d’authentification.
+
+![Capture 23](images/23.png)
+
+![Capture 24](images/24.png)
+
+On voit qu’en mettant le bon code, l’accès est quand même refusé : l’échec du required placé au-dessus ne peut pas être annulé par la réussite du sufficient.
+
+![Capture 25](images/25.png)
+
+Tandis que si on inverse ces deux lignes, la connexion marche sans problème.
+
+![Capture 26](images/26.png)
+
+Donc oui, l’ordre compte.
+
 *(rapport en cours de rédaction)*
